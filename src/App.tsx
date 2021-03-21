@@ -6,12 +6,21 @@ import Menu from './components/Menu/menu';
 import MenuItem from './components/Menu/menuitem'; 
 import SubMenu from './components/Menu/subMenu';
 import Transition from './components/Transition/index'
+import Input from './components/Input/index'
 library.add(fas);
 function App() {
   const [show,setShow] = useState(false);
   return (
     <div className="App">
       <header className="App-header">
+        <Input
+          style={{width: '400px'}}
+          placeholder="placeholder"
+          icon="search"
+          // prepend="https"
+          // append=".com"
+        />
+
         <Menu  
           // mode="vertical"
           defaultIndex={'0'} 
