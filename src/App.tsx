@@ -7,11 +7,20 @@ import MenuItem from './components/Menu/menuitem';
 import SubMenu from './components/Menu/subMenu';
 import Transition from './components/Transition/index'
 import Input from './components/Input/index'
+import axios from 'axios'
 library.add(fas);
 function App() {
   const [show,setShow] = useState(false);
   return (
     <div className="App">
+      <div onClick={()=>{
+        axios.get('https://jsonplaceholder.typicode.com/todos/1').then((res)=>{
+          console.log(res.data)
+        })
+        console.log(1)
+      }}>
+        click
+      </div>
       <header className="App-header">
         <Input
           style={{width: '400px'}}
