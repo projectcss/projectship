@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import Button, {ButtonSize, ButtonType} from './components/Button/button';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -11,15 +11,33 @@ import axios from 'axios'
 library.add(fas);
 function App() {
   const [show,setShow] = useState(false);
+  const [title,setTitle] = useState<string>('')
+  // useEffect(() => {
+  //   axios.get('http://jsonplaceholder.typicode.com/posts/1').then((res) => {
+  //     console.log(res);
+  //     setTitle(res.data.title);
+  //   })
+  // },[])
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if(files) {
+      const uploadFile = files[0];
+      const formData = new FormData();
+      formData.append(uploadFile.name, uploadFile);
+      axios.post('http://jsonplaceholder.typicode.com/posts', formData, {
+        headers: {
+          'Context-type': 'multipart/form-data'
+        }
+      }).then((res) => {
+        console.log(res)
+      })
+    }
+  }
   return (
     <div className="App">
-      <div onClick={()=>{
-        axios.get('https://jsonplaceholder.typicode.com/todos/1').then((res)=>{
-          console.log(res.data)
-        })
-        console.log(1)
-      }}>
-        click
+      <div>
+        <input type="file" name="myFile" onChange={handleFileChange}/>
       </div>
       <header className="App-header">
         <Input
