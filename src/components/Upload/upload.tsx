@@ -1,7 +1,9 @@
 import React, { ChangeEvent, useRef, useState } from 'react'
 import  axios from 'axios'
 import UploadList from './uploadList'
-import Button, { ButtonType } from  '../Button/button'
+// import Button, { ButtonType } from  '../Button/button'
+import Dragger from './dragger'
+
 export type UploadFileStatus = 'ready' | 'uploading' | 'success' | 'error'
 
 export interface UploadProps {
@@ -52,6 +54,43 @@ export interface UploadProps {
      * 定义移除文件事件
      */
     onRemove?: (file: UploadFile) => void;
+
+    /**
+     * 增加自定义请求头信息
+     */
+    headers?: {[key: string]: any}
+
+    /**
+     * 增加自定义文件名称
+     */
+    name?: string;
+
+    /**
+     * 增加自定义数据
+     */
+
+    data?: {[key: string]: any}
+
+    /**
+     * 定义发送请求时是否携带cookie
+     */
+
+    withCredentials?: boolean
+
+    /**
+     * 定义发送数据的类型
+     */
+    accept?: string;
+
+    /**
+     * 上传文件是否支持多选
+     */
+    multiple?: boolean;
+    
+    /**
+     * 是否支持拖动文件上传
+     */
+    drag?: boolean;
 }
 
 //定义文件列表信息
@@ -108,7 +147,14 @@ const Upload: React.FC<UploadProps> = (props) => {
         beforeUpload,
         onChange,
         defaultFileList,
-        onRemove
+        onRemove,
+        headers,
+        name,
+        data,
+        withCredentials,
+        accept,
+        multiple,
+        children
     } = props;
     const [fileList,setFileList] = useState<UploadFile[]>(defaultFileList || [])
     const fileInput = useRef<HTMLInputElement>(null);
@@ -177,15 +223,21 @@ const Upload: React.FC<UploadProps> = (props) => {
             return [...prevList, _file];
         })
         const formData = new FormData();
-        formData.append(file.name, file);
+        formData.append(name || 'file', file);
+        if(data) {
+            Object.keys(data).forEach((key) => {
+                formData.append(key, data[key]);
+            })
+        }
         axios.post(action, formData, {
             headers:{
+                ...headers,
                 'Context-type': 'multipart/form-data'
             },
+            withCredentials,
             onUploadProgress: (e) => {
               //获取当前上体积与总体积
               let percentage = Math.round((e.loaded * 100) / e.total) || 0;
-              console.log(percentage)
                 if(percentage < 100) {
                     updateFileList(_file, {status:'uploading', percent:percentage})
                     if (onProgress) {
@@ -213,15 +265,19 @@ const Upload: React.FC<UploadProps> = (props) => {
     }
     return (
         <div>
-            <Button btnType={ButtonType.Primary} onClick={handleClick}>
-                Upload File
-            </Button>
+            <div onClick={handleClick} className="viking-upload-wrapper">
+                <Dragger onFile={(files) => {uploadFile(files)}}>
+                    {children}
+                </Dragger>
+            </div>
             <input  
                 className="viking-file-input" 
                 type="file" 
                 ref={fileInput}
                 style={{display: 'none'}}
                 onChange={handleFileChange}
+                accept={accept}
+                multiple={multiple}
                 />
             <UploadList
                 fileList={fileList}
@@ -230,5 +286,7 @@ const Upload: React.FC<UploadProps> = (props) => {
         </div>
     )
 }
-
+Upload.defaultProps = {
+    name: 'file'
+}
 export default Upload
