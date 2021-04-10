@@ -193,6 +193,7 @@ const Upload: React.FC<UploadProps> = (props) => {
         }
     }
     const uploadFile = (files: FileList) => {
+        console.log(files)
         const fileArray = Array.from(files);
         fileArray.forEach((file) => {
             if(!beforeUpload) {

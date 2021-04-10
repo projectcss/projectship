@@ -19,6 +19,10 @@ export interface InputProps
 
   icon?: IconProp;
 
+  /**标明图标位置在左边还是右边 */
+
+  iconLocal?: string;
+
   /**添加前缀，用于配置一些固定的组合 */
 
   prepend?: string | ReactElement;
@@ -43,7 +47,7 @@ export interface InputProps
  */
 
 const Input: React.FC<InputProps> = (props) => {
-  const { disabled, size, icon, prepend, append, style, ...restProps } = props;
+  const { iconLocal,disabled, size, icon, prepend, append, style, ...restProps } = props;
   const cname = classNames("viking-input-wrapper", {
     [`input-size-${size}`]: size,
     "is-disable": disabled,
@@ -66,13 +70,13 @@ const Input: React.FC<InputProps> = (props) => {
     <div className={cname} style={style}>
       {prepend && <div className="viking-input-group-prepend">{prepend}</div>}
       {icon && (
-        <div className="icon-wrapper">
+        <div className={`${"icon-wrapper"} ${iconLocal==="left"?"icon-left":''}`}>
           <Icon icon={icon} title={`title-${icon}`} />
         </div>
       )}
       <input
         disabled={disabled}
-        className="viking-input-inner"
+        className={`${"viking-input-inner"} ${iconLocal==="left"?"icon-left":''}`}
         {...restProps}
       />
       {append && <div className="viking-input-group-append">{append}</div>}

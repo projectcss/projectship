@@ -43,13 +43,14 @@ function App() {
         <Input
           style={{width: '400px'}}
           placeholder="placeholder"
-          icon="search"
+          icon="angle-up"
+          iconLocal="left"
           // prepend="https"
           // append=".com"
         />
 
         <Menu  
-          // mode="vertical"
+          mode="vertical"
           defaultIndex={'0'} 
           onSelect={(index) => { console.log(index) }}
           defaultOpenSubMenus={['2']}

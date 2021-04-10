@@ -4,7 +4,6 @@ import classNames from 'classnames'
 interface DraggerProps {
   onFile: (files: FileList) => void;
 }
-
 export const Dragger: FC<DraggerProps> = (props) => {
   const { onFile, children } = props
   const [ dragOver, setDragOver ] = useState(false)
@@ -14,6 +13,7 @@ export const Dragger: FC<DraggerProps> = (props) => {
   const handleDrop = (e: DragEvent<HTMLElement>) => {
     e.preventDefault()
     setDragOver(false)
+    console.log(e.dataTransfer.files)
     onFile(e.dataTransfer.files)
   }
   const handleDrag = (e: DragEvent<HTMLElement>, over: boolean) => {
